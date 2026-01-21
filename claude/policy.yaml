@@ -1,0 +1,155 @@
+permissions:
+  filesystem:
+    read: true
+    write: true
+    write_patterns:
+      - "src/**"
+      - "tests/**"
+      - "test/**"
+      - "docs/**"
+      - "scripts/**"
+      - "config/**"
+      - "*.md"
+      - "*.json"
+      - "*.yaml"
+      - "*.yml"
+      - "*.toml"
+    exclude_patterns:
+      - ".env"
+      - ".env.*"
+      - "**/.git/**"
+      - "**/node_modules/**"
+      - "**/vendor/**"
+      - "**/__pycache__/**"
+      - "**/dist/**"
+      - "**/build/**"
+      - "*.key"
+      - "*.pem"
+      - "*.crt"
+      - "**/secrets/**"
+
+  exec:
+    allowed_commands:
+      # Version control
+      - git
+
+      # Build tools
+      - make
+      - cmake
+      - gradle
+      - mvn
+
+      # Shell
+      - bash
+      - sh
+      - zsh
+
+      # Go
+      - go
+
+      # Node.js/JavaScript
+      - node
+      - npm
+      - yarn
+      - pnpm
+      - npx
+
+      # Python
+      - python
+      - python3
+      - pip
+      - pip3
+      - poetry
+      - pipenv
+
+      # Rust
+      - cargo
+      - rustc
+
+      # Docker/Container
+      - docker
+      - docker-compose
+      - podman
+      - kubectl
+
+      # Utilities
+      - curl
+      - wget
+      - jq
+      - grep
+      - sed
+      - awk
+      - find
+
+      # Testing
+      - pytest
+      - jest
+      - mocha
+      - go test
+
+    blocked_commands:
+      - rm -rf /
+      - dd
+      - mkfs
+      - fdisk
+
+    timeout: 300000  # 5 minutes
+
+  network:
+    outbound: true
+    allowed_hosts:
+      # Local development
+      - localhost
+      - 127.0.0.1
+      - "0.0.0.0"
+
+      # Package registries
+      - "*.npmjs.org"
+      - "registry.npmjs.org"
+      - "*.pypi.org"
+      - "pypi.org"
+      - "*.python.org"
+      - "pkg.go.dev"
+      - "proxy.golang.org"
+      - "crates.io"
+
+      # Code hosting
+      - "*.github.com"
+      - "github.com"
+      - "raw.githubusercontent.com"
+      - "*.gitlab.com"
+      - "gitlab.com"
+      - "bitbucket.org"
+
+      # Cloud providers (add as needed)
+      - "*.amazonaws.com"
+      - "*.cloudfront.net"
+
+      # CDNs
+      - "*.cloudflare.com"
+      - "cdnjs.cloudflare.com"
+      - "unpkg.com"
+      - "cdn.jsdelivr.net"
+
+      # Documentation
+      - "*.readthedocs.io"
+      - "docs.rs"
+
+    blocked_hosts:
+      - "*.internal"
+      - "169.254.169.254"  # AWS metadata service
+      - "metadata.google.internal"  # GCP metadata service
+
+    allowed_ports:
+      - 80
+      - 443
+      - 8000
+      - 8080
+      - 3000
+      - 5000
+      - 9000
+
+rate_limits:
+  commands_per_minute: 60
+  network_requests_per_minute: 100
+  file_operations_per_minute: 200

@@ -1,0 +1,45 @@
+# Logs
+logs/
+*.log
+*.log.*
+
+# Backups
+backups/
+*.backup
+*.bak
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+*~
+
+# OS-specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE-specific
+.vscode/
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+
+# Environment files (if any)
+.env
+.env.local
+.env.*.local
+
+# Test outputs
+coverage/
+*.coverage
+.pytest_cache/
+__pycache__/

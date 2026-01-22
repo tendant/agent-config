@@ -38,14 +38,20 @@ permissions:
       - cmake
       - gradle
       - mvn
+      - bazel
+      - ninja
 
       # Shell
       - bash
       - sh
       - zsh
+      - fish
 
       # Go
       - go
+      - gofmt
+      - golint
+      - delve
 
       # Node.js/JavaScript
       - node
@@ -53,6 +59,10 @@ permissions:
       - yarn
       - pnpm
       - npx
+      - bun
+      - deno
+      - tsx
+      - ts-node
 
       # Python
       - python
@@ -61,31 +71,206 @@ permissions:
       - pip3
       - poetry
       - pipenv
+      - uv
+      - ruff
+      - black
+      - mypy
+      - pylint
+      - flake8
 
       # Rust
       - cargo
       - rustc
+      - rustfmt
+      - clippy
+
+      # Ruby
+      - ruby
+      - gem
+      - bundle
+      - rake
+      - rails
+
+      # Java/JVM
+      - java
+      - javac
+      - scala
+      - sbt
+      - kotlin
+
+      # C/C++
+      - gcc
+      - g++
+      - clang
+      - clang++
+      - llvm
 
       # Docker/Container
       - docker
       - docker-compose
       - podman
       - kubectl
+      - helm
+      - minikube
+      - kind
 
-      # Utilities
-      - curl
-      - wget
-      - jq
+      # Database CLI
+      - psql
+      - mysql
+      - sqlite3
+      - redis-cli
+      - mongo
+      - mongosh
+
+      # Cloud CLI
+      - aws
+      - gcloud
+      - az
+      - terraform
+      - terragrunt
+      - pulumi
+
+      # File operations
+      - ls
+      - cat
+      - head
+      - tail
+      - less
+      - more
+      - wc
+      - sort
+      - uniq
+      - diff
+      - cp
+      - mv
+      - mkdir
+      - touch
+      - chmod
+      - chown
+
+      # Text processing
       - grep
       - sed
       - awk
+      - cut
+      - tr
+      - paste
+      - column
+      - jq
+      - yq
+      - xmllint
+
+      # Network utilities
+      - curl
+      - wget
+      - nc
+      - netcat
+      - telnet
+      - ping
+      - traceroute
+      - dig
+      - nslookup
+      - host
+      - ss
+      - netstat
+      - lsof
+
+      # System info
+      - ps
+      - top
+      - htop
+      - df
+      - du
+      - free
+      - uptime
+      - uname
+      - whoami
+      - id
+      - env
+      - printenv
+      - date
+      - cal
+
+      # Archive/compression
+      - tar
+      - gzip
+      - gunzip
+      - bzip2
+      - bunzip2
+      - zip
+      - unzip
+      - 7z
+
+      # Search and file management
       - find
+      - locate
+      - which
+      - whereis
+      - file
+      - stat
+      - tree
+      - fd
+      - rg
+      - ripgrep
+      - ag
+      - fzf
 
       # Testing
       - pytest
       - jest
       - mocha
+      - jasmine
+      - karma
+      - vitest
+      - ava
+      - tape
       - go test
+      - cargo test
+
+      # Linting and formatting
+      - eslint
+      - prettier
+      - stylelint
+      - shellcheck
+      - yamllint
+      - jsonlint
+      - hadolint
+
+      # Package managers
+      - apt
+      - apt-get
+      - yum
+      - dnf
+      - pacman
+      - brew
+      - port
+      - snap
+      - flatpak
+
+      # Editors (CLI)
+      - vim
+      - nvim
+      - nano
+      - emacs
+      - vi
+
+      # Monitoring/debugging
+      - strace
+      - ltrace
+      - gdb
+      - lldb
+      - valgrind
+      - perf
+
+      # Misc development tools
+      - tmux
+      - screen
+      - watch
+      - xargs
+      - parallel
+      - entr
+      - fswatch
+      - inotifywait
 
     blocked_commands:
       - rm -rf /

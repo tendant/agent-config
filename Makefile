@@ -40,11 +40,17 @@ validate: ## Validate YAML configuration files
 		yamllint $(SOURCE_DIR)/*.yaml && \
 		echo "$(COLOR_GREEN)✓ YAML validation passed$(COLOR_RESET)"; \
 	elif command -v python3 >/dev/null 2>&1; then \
-		python3 -c "import yaml, sys; \
-			[yaml.safe_load(open('$(SOURCE_DIR)/' + f)) for f in ['config.yaml', 'policy.yaml']] \
-			and print('$(COLOR_GREEN)✓ YAML syntax valid$(COLOR_RESET)')"; \
+		if python3 -c "import yaml" 2>/dev/null; then \
+			python3 -c "import yaml, sys; \
+				[yaml.safe_load(open('$(SOURCE_DIR)/' + f)) for f in ['config.yaml', 'policy.yaml']] \
+				and print('$(COLOR_GREEN)✓ YAML syntax valid$(COLOR_RESET)')"; \
+		else \
+			echo "$(COLOR_YELLOW)⚠ Python yaml module not installed$(COLOR_RESET)"; \
+			echo "$(COLOR_YELLOW)  Install with: pip3 install pyyaml$(COLOR_RESET)"; \
+			echo "$(COLOR_YELLOW)  Skipping validation...$(COLOR_RESET)"; \
+		fi \
 	else \
-		echo "$(COLOR_YELLOW)⚠ No YAML validator found (install yamllint or python3)$(COLOR_RESET)"; \
+		echo "$(COLOR_YELLOW)⚠ No YAML validator found (install yamllint or python3 with pyyaml)$(COLOR_RESET)"; \
 		echo "$(COLOR_YELLOW)  Skipping validation...$(COLOR_RESET)"; \
 	fi
 

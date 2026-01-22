@@ -36,25 +36,38 @@ make help
 
 ## Features
 
+### Automation First
+- **Auto mode**: Minimal confirmations, maximum productivity
+- **Proactive execution**: Auto-install dependencies, auto-fix errors
+- **Parallel operations**: Up to 10 concurrent operations for speed
+- **Smart retry logic**: Automatic retry with backoff for network/timeout errors
+- **Code formatting**: Auto-format and organize imports
+- **Trust local commands**: 200+ CLI tools pre-approved
+
 ### Security
 - Write protection for sensitive files (.env, .git, secrets, keys)
-- Network access controls with allowlists
-- Command execution restrictions
-- Metadata service blocking
-- Rate limiting
+- Network access controls with allowlists for package registries and code hosting
+- Command execution restrictions (only dangerous operations require confirmation)
+- Metadata service blocking (AWS, GCP)
+- Rate limiting (60 commands/min, 100 network requests/min)
+- Production environment detection with guard rails
 
 ### Operations
 - Automatic backups before changes
-- Structured logging with rotation
-- Configurable timeouts and retries
-- Resource limits (file size, memory, concurrent ops)
-- Production guard for safety
+- Structured logging with rotation (10MB max, 5 files)
+- Generous timeouts (5min commands, 1min network)
+- Large resource limits (50MB files, 1GB memory, 500k char output)
+- Continue on error mode for resilience
+- Caching enabled for performance
 
 ### Development Support
-- Multi-language tooling (Node.js, Python, Go, Rust)
-- Package manager integration (npm, pip, cargo)
-- Docker and Kubernetes support
-- Testing framework compatibility
+- **200+ CLI tools**: Multi-language tooling (Node.js, Python, Go, Rust, Java, Ruby, C/C++)
+- **Package managers**: npm, pip, cargo, maven, gradle, gem, poetry, pnpm, bun, deno
+- **Cloud & DevOps**: Docker, Kubernetes, AWS, GCP, Azure, Terraform, Helm
+- **Database CLIs**: psql, mysql, sqlite3, redis-cli, mongo
+- **Testing**: pytest, jest, mocha, vitest, cargo test, go test
+- **Linting & formatting**: eslint, prettier, black, ruff, rustfmt, gofmt
+- **File operations**: All standard Unix utilities (ls, cat, grep, sed, awk, find, etc.)
 
 ## Customization
 

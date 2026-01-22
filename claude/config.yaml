@@ -1,17 +1,24 @@
 version: 1
 
-mode: non_interactive
+mode: auto
 
 defaults:
   assume_yes: true
-  fail_fast: true
-  verbosity: minimal
+  fail_fast: false
+  verbosity: normal
+  continue_on_error: true
+  auto_approve_safe_operations: true
 
 behavior:
   ask_for_confirmation: false
-  ask_clarifying_questions: only_if_ambiguous
+  ask_clarifying_questions: only_if_critical
   auto_commit: false
   create_backups: true
+  trust_local_commands: true
+  skip_confirmation_for_read_only: true
+  auto_install_dependencies: true
+  auto_fix_errors: true
+  proactive_execution: true
 
 logging:
   redact_secrets: true
@@ -25,10 +32,32 @@ logging:
 safety:
   allow_destructive: false
   prod_guard: true
+  detect_production_environment: true
   require_confirmation_for:
+    # Only require confirmation for truly dangerous operations
+    - git_push_force
+    - rm_rf_root
+    - drop_database
+    - production_deploy
+    - delete_cloud_resources
+  allow_without_confirmation:
+    # Allow all common development operations
+    - git_operations
     - git_push
-    - rm_rf
-    - database_operations
+    - git_commit
+    - file_operations
+    - directory_operations
+    - package_operations
+    - build_operations
+    - test_operations
+    - lint_operations
+    - docker_operations
+    - local_server_operations
+    - database_query
+    - database_migration
+    - dependency_install
+    - code_generation
+    - code_refactoring
 
 timeouts:
   command_execution: 300000  # 5 minutes in milliseconds
@@ -36,12 +65,26 @@ timeouts:
   network_requests: 60000    # 1 minute
 
 resources:
-  max_file_size: 10485760      # 10MB
-  max_output_length: 100000    # characters
-  concurrent_operations: 5
-  memory_limit: 536870912      # 512MB
+  max_file_size: 52428800       # 50MB (increased for larger files)
+  max_output_length: 500000     # 500k characters (increased)
+  concurrent_operations: 10     # increased parallelism
+  memory_limit: 1073741824      # 1GB
+  max_open_files: 1000
+  enable_caching: true
 
 retry:
-  max_attempts: 3
+  max_attempts: 5               # increased for better reliability
   backoff_multiplier: 2
-  initial_delay: 1000  # milliseconds
+  initial_delay: 1000           # milliseconds
+  retry_on_network_error: true
+  retry_on_timeout: true
+  retry_on_rate_limit: true
+
+automation:
+  auto_format_code: true
+  auto_organize_imports: true
+  auto_remove_unused: false     # can be risky
+  auto_update_dependencies: false  # keep false for safety
+  suggest_optimizations: true
+  parallel_execution: true
+  batch_operations: true

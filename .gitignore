@@ -1,3 +1,7 @@
+# Claude Code internal settings
+.claude/
+.claude/**
+
 # Logs
 logs/
 *.log
@@ -43,3 +47,5 @@ coverage/
 *.coverage
 .pytest_cache/
 __pycache__/
+
+.claude/

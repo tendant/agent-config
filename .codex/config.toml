@@ -1,0 +1,22 @@
+# Project-scoped Codex defaults for lower-friction local work in this repo.
+# These settings apply only when the project is trusted.
+
+# Keep Codex sandboxed, but remove most routine prompts:
+# - allow edits in the workspace
+# - allow network inside the workspace-write sandbox
+# - send approval-worthy actions to the auto reviewer first
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+network_access = true
+
+[profiles.quiet]
+# Opt-in mode for maximum autonomy in this repo.
+# This never asks for approval; blocked sandbox actions fail instead.
+approval_policy = "never"
+sandbox_mode = "workspace-write"
+
+[profiles.quiet.sandbox_workspace_write]
+network_access = true

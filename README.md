@@ -19,6 +19,7 @@ make help
 
 - `claude/config.yaml` - Agent behavior, logging, timeouts, and resource limits
 - `claude/policy.yaml` - Security permissions for filesystem, execution, and network access
+- `.codex/config.toml` - Project-scoped Codex defaults with lower-friction approvals
 
 ## Makefile Commands
 
@@ -43,6 +44,13 @@ make help
 - **Smart retry logic**: Automatic retry with backoff for network/timeout errors
 - **Code formatting**: Auto-format and organize imports
 - **Trust local commands**: 200+ CLI tools pre-approved
+- **Codex project defaults**: Workspace-write sandbox, network enabled, auto-reviewed approvals
+
+### Codex Behavior
+- Default mode keeps Codex sandboxed while reducing routine confirmation prompts
+- Approval-worthy actions are routed to Codex `auto_review` instead of stopping on every safe escalation
+- `quiet` profile is available for no-prompt runs in this repo: `codex --profile quiet`
+- Project-scoped `.codex/config.toml` only loads when the repo is trusted by Codex
 
 ### Security
 - Write protection for sensitive files (.env, .git, secrets, keys)

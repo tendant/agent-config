@@ -25,7 +25,7 @@ make help
 
 | Command | Description |
 |---------|-------------|
-| `make install` | Deploy configs to `~/.config/claude` (validates & backs up first) |
+| `make install` | Deploy Claude + Codex configs (validates & backs up first) |
 | `make validate` | Check YAML syntax |
 | `make backup` | Create timestamped backup of current configs |
 | `make restore` | Restore from most recent backup |
@@ -79,11 +79,14 @@ make help
 
 ## Customization
 
-Edit `claude/config.yaml` and `claude/policy.yaml` to match your environment:
+Edit `claude/config.yaml`, `claude/policy.yaml`, and `.codex/config.toml` to match your environment:
 
 ```bash
-# Change default config directory
+# Change Claude config directory
 make install CLAUDE_CONFIG_DIR=/custom/path
+
+# Change Codex config directory
+make install CODEX_CONFIG_DIR=/custom/codex/path
 
 # Change backup location
 make backup BACKUP_DIR=/backup/path

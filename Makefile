@@ -11,6 +11,11 @@ TIMESTAMP := $(shell date +%Y%m%d_%H%M%S)
 SOURCE_DIR := ./claude
 CODEX_SOURCE_FILE := ./.codex/config.toml
 
+# TOML syntax check. Exits 2 when no parser is available (tomllib is stdlib only
+# on Python 3.11+), 1 on a genuine parse error, so a missing parser is reported
+# as "skipped" instead of "invalid TOML".
+TOML_CHECK_PY := import importlib.util, sys; m = next((importlib.import_module(n) for n in ('tomllib', 'tomli') if importlib.util.find_spec(n)), None); sys.exit(2) if m is None else m.load(open(sys.argv[1], 'rb'))
+
 # Colors for output
 COLOR_RESET := \033[0m
 COLOR_GREEN := \033[32m
@@ -59,9 +64,18 @@ validate: ## Validate YAML configuration files
 	fi
 	@if [ -f "$(CODEX_SOURCE_FILE)" ]; then \
 		if command -v python3 >/dev/null 2>&1; then \
-			python3 -c "import pathlib, tomllib; tomllib.loads(pathlib.Path('$(CODEX_SOURCE_FILE)').read_text())" >/dev/null 2>&1 && \
-				echo "$(COLOR_GREEN)✓ TOML syntax valid$(COLOR_RESET)" || \
-				(echo "$(COLOR_RED)✗ Invalid TOML in $(CODEX_SOURCE_FILE)$(COLOR_RESET)"; exit 1); \
+			err=$$(python3 -c "$(TOML_CHECK_PY)" "$(CODEX_SOURCE_FILE)" 2>&1); rc=$$?; \
+			if [ $$rc -eq 0 ]; then \
+				echo "$(COLOR_GREEN)✓ TOML syntax valid$(COLOR_RESET)"; \
+			elif [ $$rc -eq 2 ]; then \
+				echo "$(COLOR_YELLOW)⚠ No TOML parser found (needs Python 3.11+ or tomli)$(COLOR_RESET)"; \
+				echo "$(COLOR_YELLOW)  Install with: pip3 install tomli$(COLOR_RESET)"; \
+				echo "$(COLOR_YELLOW)  Skipping TOML validation...$(COLOR_RESET)"; \
+			else \
+				echo "$(COLOR_RED)✗ Invalid TOML in $(CODEX_SOURCE_FILE)$(COLOR_RESET)"; \
+				echo "$$err" | tail -n 3; \
+				exit 1; \
+			fi; \
 		else \
 			echo "$(COLOR_YELLOW)⚠ python3 not found; skipping TOML validation$(COLOR_RESET)"; \
 		fi; \
@@ -87,7 +101,7 @@ backup: init ## Backup existing configuration files
 		echo "$(COLOR_YELLOW)No existing configuration found to backup$(COLOR_RESET)"; \
 	fi
 
-install: init validate backup ## Install configuration files to Claude config directory
+install: init backup ## Install configuration files to Claude config directory
 	@echo "$(COLOR_BLUE)Installing configuration files...$(COLOR_RESET)"
 	@cp $(SOURCE_DIR)/config.yaml $(CLAUDE_CONFIG_DIR)/config.yaml
 	@echo "$(COLOR_GREEN)✓ Installed config.yaml$(COLOR_RESET)"
@@ -104,7 +118,7 @@ install: init validate backup ## Install configuration files to Claude config di
 	@echo "$(COLOR_BLUE)Configuration location: $(CLAUDE_CONFIG_DIR)$(COLOR_RESET)"
 	@echo "$(COLOR_BLUE)Codex config location: $(CODEX_CONFIG_DIR)$(COLOR_RESET)"
 
-install-local: init validate ## Install configuration files to local directory only
+install-local: init ## Install configuration files to local directory only
 	@echo "$(COLOR_BLUE)Configuration already in local directory$(COLOR_RESET)"
 	@echo "$(COLOR_GREEN)✓ Local setup complete$(COLOR_RESET)"
 

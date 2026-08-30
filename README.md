@@ -8,6 +8,9 @@ Production-ready configuration files for Claude AI agents with comprehensive sec
 # Install configuration files
 make install
 
+# Optionally check syntax before or after installing
+make validate
+
 # Check status
 make status
 
@@ -25,8 +28,8 @@ make help
 
 | Command | Description |
 |---------|-------------|
-| `make install` | Deploy Claude + Codex configs (validates & backs up first) |
-| `make validate` | Check YAML syntax |
+| `make install` | Deploy Claude + Codex configs (backs up first) |
+| `make validate` | Check YAML + TOML syntax (run separately; not part of `install`) |
 | `make backup` | Create timestamped backup of current configs |
 | `make restore` | Restore from most recent backup |
 | `make diff` | Show differences between local and installed configs |

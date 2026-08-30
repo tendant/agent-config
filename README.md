@@ -19,7 +19,7 @@ make help
 
 - `claude/config.yaml` - Agent behavior, logging, timeouts, and resource limits
 - `claude/policy.yaml` - Security permissions for filesystem, execution, and network access
-- `.codex/config.toml` - Project-scoped Codex defaults with lower-friction approvals
+- `.codex/config.toml` - Codex defaults with approvals disabled (deployed to `~/.codex/config.toml`)
 
 ## Makefile Commands
 
@@ -44,13 +44,20 @@ make help
 - **Smart retry logic**: Automatic retry with backoff for network/timeout errors
 - **Code formatting**: Auto-format and organize imports
 - **Trust local commands**: 200+ CLI tools pre-approved
-- **Codex project defaults**: Workspace-write sandbox, network enabled, auto-reviewed approvals
+- **Codex defaults**: No approval prompts, full filesystem and network access
 
 ### Codex Behavior
-- Default mode keeps Codex sandboxed while reducing routine confirmation prompts
-- Approval-worthy actions are routed to Codex `auto_review` instead of stopping on every safe escalation
-- `quiet` profile is available for no-prompt runs in this repo: `codex --profile quiet`
-- Project-scoped `.codex/config.toml` only loads when the repo is trusted by Codex
+- `approval_policy = "never"` - Codex never stops to ask before running commands or editing files
+- `sandbox_mode = "danger-full-access"` - nothing is blocked, so "never" does not turn into silent sandbox failures
+- Workspace paths under `~/workspace` are pre-marked `trusted`, skipping the startup trust prompt
+- `shell_environment_policy.inherit = "all"` passes the full environment through so tools do not fail on missing credentials
+- Web search enabled without prompting
+- Fallback profiles when guard rails are wanted:
+  - `codex --profile safe` - workspace-write sandbox, prompts only on escalation
+  - `codex --profile readonly` - read-only inspection, still no prompts
+
+> **Warning:** the default profile gives Codex unrestricted read/write and network
+> access on this machine. Use `--profile safe` for untrusted repos.
 
 ### Security
 - Write protection for sensitive files (.env, .git, secrets, keys)

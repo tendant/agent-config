@@ -1,22 +1,63 @@
-# Project-scoped Codex defaults for lower-friction local work in this repo.
-# These settings apply only when the project is trusted.
+# Codex defaults tuned for maximum autonomy / minimum prompting.
+# Deployed to ~/.codex/config.toml by `make install`.
 
-# Keep Codex sandboxed, but remove most routine prompts:
-# - allow edits in the workspace
-# - allow network inside the workspace-write sandbox
-# - send approval-worthy actions to the auto reviewer first
-approval_policy = "on-request"
-approvals_reviewer = "auto_review"
-sandbox_mode = "workspace-write"
+# Never ask for approval. Codex runs commands and edits files on its own.
+approval_policy = "never"
 
+# Full filesystem + network access: nothing is blocked, so "never" approval
+# does not turn into silent sandbox failures.
+sandbox_mode = "danger-full-access"
+
+# Belt-and-suspenders: if sandbox_mode is overridden back to workspace-write
+# (e.g. `codex --sandbox workspace-write`), keep it as permissive as possible.
 [sandbox_workspace_write]
 network_access = true
+exclude_tmpdir_env_var = false
+exclude_slash_tmp = false
+writable_roots = [
+  "/Users/lei/workspace",
+  "/Users/lei/.codex",
+  "/Users/lei/.config",
+  "/Users/lei/.cache",
+  "/Users/lei/.npm",
+  "/Users/lei/.cargo",
+  "/Users/lei/go",
+  "/tmp",
+  "/private/tmp",
+]
 
-[profiles.quiet]
-# Opt-in mode for maximum autonomy in this repo.
-# This never asks for approval; blocked sandbox actions fail instead.
-approval_policy = "never"
+# Don't prompt to trust these directories on startup.
+[projects."/Users/lei/workspace"]
+trust_level = "trusted"
+
+[projects."/Users/lei/workspace/genai"]
+trust_level = "trusted"
+
+[projects."/Users/lei/workspace/genai/agent-config"]
+trust_level = "trusted"
+
+# Let the agent search the web without asking.
+[tools]
+web_search = true
+
+# Pass the full shell environment through instead of a filtered subset,
+# so tools don't fail on missing credentials/PATH and trigger retries.
+[shell_environment_policy]
+inherit = "all"
+ignore_default_excludes = true
+exclude = []
+
+# --- Opt-in fallback profiles -------------------------------------------------
+
+# `codex --profile safe`: sandboxed, but still low-friction.
+[profiles.safe]
+approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 
-[profiles.quiet.sandbox_workspace_write]
+[profiles.safe.sandbox_workspace_write]
 network_access = true
+
+# `codex --profile readonly`: inspection only, no writes, no prompts.
+[profiles.readonly]
+approval_policy = "never"
+sandbox_mode = "read-only"

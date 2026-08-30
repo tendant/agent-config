@@ -1,5 +1,8 @@
 # Codex defaults tuned for maximum autonomy / minimum prompting.
-# Deployed to ~/.codex/config.toml by `make install`.
+#
+# TEMPLATE: `make install` expands the home-directory placeholder below and
+# writes the result to ~/.codex/config.toml. Do not copy this file into place
+# by hand -- Codex does not expand environment variables in config paths.
 
 # Never ask for approval. Codex runs commands and edits files on its own.
 approval_policy = "never"
@@ -15,25 +18,25 @@ network_access = true
 exclude_tmpdir_env_var = false
 exclude_slash_tmp = false
 writable_roots = [
-  "/Users/lei/workspace",
-  "/Users/lei/.codex",
-  "/Users/lei/.config",
-  "/Users/lei/.cache",
-  "/Users/lei/.npm",
-  "/Users/lei/.cargo",
-  "/Users/lei/go",
+  "$HOME/workspace",
+  "$HOME/.codex",
+  "$HOME/.config",
+  "$HOME/.cache",
+  "$HOME/.npm",
+  "$HOME/.cargo",
+  "$HOME/go",
   "/tmp",
   "/private/tmp",
 ]
 
 # Don't prompt to trust these directories on startup.
-[projects."/Users/lei/workspace"]
+[projects."$HOME/workspace"]
 trust_level = "trusted"
 
-[projects."/Users/lei/workspace/genai"]
+[projects."$HOME/workspace/genai"]
 trust_level = "trusted"
 
-[projects."/Users/lei/workspace/genai/agent-config"]
+[projects."$HOME/workspace/genai/agent-config"]
 trust_level = "trusted"
 
 # Let the agent search the web without asking.

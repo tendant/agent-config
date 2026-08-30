@@ -9,7 +9,10 @@ CODEX_CONFIG_DIR ?= $(HOME)/.codex
 BACKUP_DIR ?= $(HOME)/.config/claude/backups
 TIMESTAMP := $(shell date +%Y%m%d_%H%M%S)
 SOURCE_DIR := ./claude
-CODEX_SOURCE_FILE := ./.codex/config.toml
+CODEX_SOURCE_FILE := ./.codex/config.toml.template
+
+# Expand $HOME in the Codex template: $(call codex-render,<destination>)
+codex-render = sed "s|\$$HOME|$$HOME|g" $(CODEX_SOURCE_FILE) > "$(1)"
 
 # TOML syntax check. Exits 2 when no parser is available (tomllib is stdlib only
 # on Python 3.11+), 1 on a genuine parse error, so a missing parser is reported
@@ -108,8 +111,8 @@ install: init backup ## Install configuration files to Claude config directory
 	@cp $(SOURCE_DIR)/policy.yaml $(CLAUDE_CONFIG_DIR)/policy.yaml
 	@echo "$(COLOR_GREEN)✓ Installed policy.yaml$(COLOR_RESET)"
 	@if [ -f "$(CODEX_SOURCE_FILE)" ]; then \
-		cp $(CODEX_SOURCE_FILE) $(CODEX_CONFIG_DIR)/config.toml; \
-		echo "$(COLOR_GREEN)✓ Installed codex config.toml$(COLOR_RESET)"; \
+		$(call codex-render,$(CODEX_CONFIG_DIR)/config.toml); \
+		echo "$(COLOR_GREEN)✓ Installed codex config.toml (\$$HOME -> $$HOME)$(COLOR_RESET)"; \
 	else \
 		echo "$(COLOR_YELLOW)⚠ $(CODEX_SOURCE_FILE) not found; skipped Codex install$(COLOR_RESET)"; \
 	fi
@@ -157,8 +160,11 @@ diff: ## Show differences between local and installed configs
 	fi
 	@echo ""
 	@if [ -f "$(CODEX_CONFIG_DIR)/config.toml" ] && [ -f "$(CODEX_SOURCE_FILE)" ]; then \
-		echo "$(COLOR_YELLOW)codex config.toml:$(COLOR_RESET)"; \
-		diff -u $(CODEX_CONFIG_DIR)/config.toml $(CODEX_SOURCE_FILE) || true; \
+		echo "$(COLOR_YELLOW)codex config.toml (template rendered with \$$HOME):$(COLOR_RESET)"; \
+		rendered=$$(mktemp); \
+		$(call codex-render,$$rendered); \
+		diff -u $(CODEX_CONFIG_DIR)/config.toml $$rendered || true; \
+		rm -f $$rendered; \
 	elif [ ! -f "$(CODEX_SOURCE_FILE)" ]; then \
 		echo "$(COLOR_YELLOW)No source Codex config found$(COLOR_RESET)"; \
 	else \

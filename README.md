@@ -22,7 +22,7 @@ make help
 
 - `claude/config.yaml` - Agent behavior, logging, timeouts, and resource limits
 - `claude/policy.yaml` - Security permissions for filesystem, execution, and network access
-- `.codex/config.toml` - Codex defaults with approvals disabled (deployed to `~/.codex/config.toml`)
+- `.codex/config.toml.template` - Codex defaults with approvals disabled; `make install` expands `$HOME` and writes it to `~/.codex/config.toml`
 
 ## Makefile Commands
 
@@ -55,6 +55,7 @@ make help
 - Workspace paths under `~/workspace` are pre-marked `trusted`, skipping the startup trust prompt
 - `shell_environment_policy.inherit = "all"` passes the full environment through so tools do not fail on missing credentials
 - Web search enabled without prompting
+- Paths use a `$HOME` placeholder expanded at install time, so the config is not tied to one username
 - Fallback profiles when guard rails are wanted:
   - `codex --profile safe` - workspace-write sandbox, prompts only on escalation
   - `codex --profile readonly` - read-only inspection, still no prompts
@@ -89,7 +90,7 @@ make help
 
 ## Customization
 
-Edit `claude/config.yaml`, `claude/policy.yaml`, and `.codex/config.toml` to match your environment:
+Edit `claude/config.yaml`, `claude/policy.yaml`, and `.codex/config.toml.template` to match your environment. In the Codex template, write home-relative paths as `$HOME/...` rather than absolute ones:
 
 ```bash
 # Change Claude config directory
